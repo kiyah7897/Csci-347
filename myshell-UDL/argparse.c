@@ -29,12 +29,22 @@
 *   argCount("ls -l /home") returns 3
 *   argCount("   ls    -l   /home  ") returns 3
 */
-static int argCount(char*line)
-{
- //write your code
+static int argCount(char*line){
+       int count = 0;
+       int isWord = 0;
+       int i = 0;
+
+       while(line[i] != '\0'){
+        if(isspace((unsigned char)line[i])){
+          isWord = 0;
+        }else if(!isWord){
+          count++;
+          isWord  = 1;
+        }
+          i++;
+       }
+       return count;
 }
-
-
 
 /*
 * argparse
@@ -58,7 +68,35 @@ static int argCount(char*line)
 *   argparse("ls -l /home", &argc) --> returns ["ls", "-l", "/home", NULL] and set argc to 3
 *   argparse("   ls    -l   /home  ", &argc) --> returns ["ls", "-l", "/home", NULL] and set argc to 3
 */
-char** argparse(char* line, int* argcp)
-{
-  //write your code
+char** argparse(char* line, int* argcp){
+  int numStrings = argCount(line);
+  char **arg = malloc( (numStrings + 1 ) * sizeof(char *) );
+  if(arg == NULL){
+    *argcp = 0;
+    return NULL;
+  }
+  int i = 0;
+  int n = 0;
+  while(line[i] != '\0'){
+    while (isspace((unsigned char)line[i])){
+      i++;
+    }
+    if(line[i] == '\0'){
+      break;
+    }
+    arg[n] = line + i;
+    n++;
+
+    while(line[i] != '\0' && !isspace((unsigned char)line[i])){
+      i++;
+    }
+
+    if(line[i] != '\0'){
+      line[i] = '\0';
+      i++;
+    }
+  }
+  arg[n] = NULL;
+  *argcp = n; 
+  return arg;
 }

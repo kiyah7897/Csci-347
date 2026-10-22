@@ -57,13 +57,13 @@ int main () {
 * Hint: There is a standard i/o function that can make getinput easier than it sounds.
 */
 ssize_t getinput(char** line, size_t* size) {
+    ssize_t len = 0;
 
-  ssize_t len = 0;
+    printf("%% ");
+    fflush(stdout);
+    len = getline(line, size, stdin);
 
-
-  //write your code
-
-  return len;
+    return len;
 }
 
 
@@ -101,4 +101,31 @@ void processline (char *line)
    *if not builtin, fork to execute the command.
    */
     //write your code
+  if(argCount == 0){
+    free(arguments);
+    return;
+  }
+  if(builtIn(arguments , argCount)){
+    free(arguments);
+    return;
+  }
+  cpid = fork();
+  if(cpid < 0){
+    perror("fork");
+    free(arguments);
+    return;
+
+  }else if(cpid == 0){
+    //child
+    execvp(arguments[0] , arguments);
+    perror(arguments[0]);
+    exit(EXIT_FAILURE);
+
+  }else{
+    //parent
+    if (waitpid(cpid, &status, 0) == -1){
+      perror("waitpid");
+    }
+  }
+  free(arguments);
 }

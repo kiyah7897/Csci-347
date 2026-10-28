@@ -89,10 +89,18 @@ int builtIn(char** args, int argcp)
 *   args: array of strings containing "exit" and optionally an exit status
 *   argcp: number of elements in args array
 */
-static void exitProgram(char** args, int argcp)
-{
+static void exitProgram(char** args, int argcp){
  //write your code
-
+ if(argcp >= 3 ){
+  fprintf(stderr ," Error too many arguments\n");
+  return;
+ }
+  if(argcp  == 1){
+  exit(0);
+}
+  char *end;
+  int value = strtol(args[1] ,&end , 10);
+  exit(value);
 }
 
 /*
@@ -111,6 +119,8 @@ static void exitProgram(char** args, int argcp)
 static void pwd(char** args, int argpc)
 {
   //write your code
+  
+
 
 }
 

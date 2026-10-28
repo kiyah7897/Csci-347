@@ -116,12 +116,19 @@ static void exitProgram(char** args, int argcp){
 *   Command: $ pwd
 *   Output: /some/path/to/directory
 */
-static void pwd(char** args, int argpc)
-{
+static void pwd(char** args, int argpc){
   //write your code
-  
-
-
+  if(argpc != 1){
+    fprintf(stderr , "Too many arguments\n");
+    return;
+  }
+  char *cwd = getcwd(NULL , 0 );
+  if(cwd == NULL){
+    perror("pwd");
+    return;
+  }
+  printf("%s\n" , cwd);
+  free(cwd);
 }
 
 /*

@@ -151,7 +151,22 @@ static void pwd(char** args, int argpc){
 *
 * Hint: Read the man page for chdir(2)
 */
-static void cd(char** args, int argcp)
-{
+static void cd(char** args, int argcp){
  //write your code
+  if(argcp > 2){
+    fprintf(stderr, "cd: too many arguments\n");
+  }
+  const char *path;
+  if(argcp == 1){
+  path = getenv("HOME");
+  if(path == NULL){
+    fprintf(stderr, "cd: HOME not set \n");
+    return;
+    }
+  }else{
+  path = args[1];
+  }
+  if(chdir(path) == -1){
+    perror("cd");
+  }
 }

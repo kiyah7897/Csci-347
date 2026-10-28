@@ -31,9 +31,14 @@ ssize_t getinput(char** line, size_t* size);
 * Hint: Use getinput and processline as appropriate.
 */
 int main () {
-
  //write your code
-
+  char *line = NULL;
+  size_t size = 0;
+    
+  while(getinput(&line , &size) != -1){
+    processline(line);
+  }
+  free(line);
   return EXIT_SUCCESS;
 }
 
@@ -116,13 +121,13 @@ void processline (char *line)
     return;
 
   }else if(cpid == 0){
-    //child
+    //child process
     execvp(arguments[0] , arguments);
     perror(arguments[0]);
     exit(EXIT_FAILURE);
 
   }else{
-    //parent
+    //parent process
     if (waitpid(cpid, &status, 0) == -1){
       perror("waitpid");
     }

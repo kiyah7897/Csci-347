@@ -19,9 +19,9 @@ static void cd(char** args, int argpcp);
 static void pwd(char** args, int argcp);
 
 //Group A
-static void cmdA_ls(char** args, int argc);
-static void cmdA_cp(char** args, int argc);
-static void cmdA_env(char** args, int argc);
+//static void cmdA_ls(char** args, int argc);
+//static void cmdA_cp(char** args, int argc);
+//static void cmdA_env(char** args, int argc);
 
 //Group B
 static void cmdB_stat(char** args, int argc);
@@ -51,7 +51,32 @@ static void cmdB_touch(char** args, int argc);
 int builtIn(char** args, int argcp)
 {
     //write your code
-}
+    if(args == NULL || argcp == 0){
+      return 0;
+    }
+
+    if(strcmp(args[0] , "stat" )== 0){
+      cmdB_stat(args, argcp);
+      return 1;
+    }else if(strcmp(args[0] , "tail")==0){
+      cmdB_tail(args, argcp);
+      return 1;
+    }else if(strcmp(args[0], "touch" )== 0){
+      cmdB_touch(args, argcp);
+      return 1;
+    }else if(strcmp(args[0], "exit") == 0){
+      exitProgram(args, argcp);
+      return 1;
+    }else if(strcmp(args[0], "pwd")== 0){
+      pwd(args, argcp);
+      return 1;
+    }else if(strcmp(args[0], "cd") == 0){
+        cd(args, argcp);
+        return 1;
+    }else{
+      return 0;
+    }
+    }
 
 /*
 * exitProgram
@@ -67,6 +92,7 @@ int builtIn(char** args, int argcp)
 static void exitProgram(char** args, int argcp)
 {
  //write your code
+
 }
 
 /*

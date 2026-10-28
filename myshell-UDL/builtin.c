@@ -28,7 +28,17 @@ static void cmdB_stat(char** args, int argc);
 static void cmdB_tail(char** args, int argc);
 static void cmdB_touch(char** args, int argc);
 
+void cmdB_stat(char** args, int argc){
 
+}
+
+void cmdB_tail(char** args, int argc){
+
+}
+
+void cmdB_touch(char** args, int argc){
+  
+}
 /*
 * builtIn
 *
@@ -155,6 +165,7 @@ static void cd(char** args, int argcp){
  //write your code
   if(argcp > 2){
     fprintf(stderr, "cd: too many arguments\n");
+    return;
   }
   const char *path;
   if(argcp == 1){

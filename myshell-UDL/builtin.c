@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -10,8 +11,8 @@
 #include <fcntl.h>
 #include <ctype.h>
 #include "builtin.h"
-#include <string.h>
 #include <dirent.h>
+
 
 //Prototypes
 static void exitProgram(char** args, int argcp);
@@ -33,11 +34,33 @@ void cmdB_stat(char** args, int argc){
 }
 
 void cmdB_tail(char** args, int argc){
-
+  
 }
 
-void cmdB_touch(char** args, int argc){
-  
+static void cmdB_touch(char** args, int argc){
+  if (argc < 2){
+    fprintf(stderr,  "touch: missing files operand\n");
+    return;
+  }
+  struct stat sb;
+  for (int i = 1; i < argc; i++){
+   if (stat(args[i] , &sb) == -1){
+    if (errno == ENOENT){
+      int fd = open(args[i], O_CREAT | O_WRONLY, 0644);
+      if (fd == -1){
+        perror(args[i]);
+      }else{
+        close(fd);
+      }
+    }else{
+      perror(args[i]);
+    }
+    }else{
+      if(utimensat(AT_FDCWD , args[i], NULL , 0) == -1){
+        perror(args[i]);
+      }
+   } 
+  }
 }
 /*
 * builtIn

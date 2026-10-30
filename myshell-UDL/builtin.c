@@ -30,11 +30,16 @@ static void cmdB_tail(char** args, int argc);
 static void cmdB_touch(char** args, int argc);
 
 void cmdB_stat(char** args, int argc){
-
+/*TODO:*/
 }
 
 void cmdB_tail(char** args, int argc){
-  
+  /*TODO:
+  check argc
+  loop over files
+  getline()
+  print ststmenrs 
+  free getline */
 }
 
 static void cmdB_touch(char** args, int argc){

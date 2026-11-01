@@ -33,14 +33,40 @@ void cmdB_stat(char** args, int argc){
 /*TODO:*/
 }
 
-void cmdB_tail(char** args, int argc){
-  /*TODO:
-  check argc
-  loop over files
-  getline()
-  print ststmenrs 
-  free getline */
-}
+static void cmdB_tail(char** args, int argc){
+  if (argc < 2){
+    fprintf(stderr, "tail: missing file operand\n");
+    return;
+  }
+
+  for (int i = 0; i < argc; i++){
+    FILE *fp = fopen(args[i] , "r");
+    if(fp == NULL){
+      perror(args[i]);
+      continue;
+    }
+    if ( argc > 2){
+      printf("==> %s <==\n", args[i]);
+    }
+    char *lines[10] = {NULL};
+    size_t size[10] = {0};
+    long count = 0;
+
+    while(getline(&lines[count %10], &size[count % 10], fp) != -1){
+      count++;
+    }
+    long n;
+    long start;
+    for(long j = 0; j < n; j++){
+      //
+    }
+    for(int k = 0; k < 10; k++){
+      free(lines[k]);
+    }
+    fclose(fp);
+
+    }
+  }
 
 static void cmdB_touch(char** args, int argc){
   if (argc < 2){

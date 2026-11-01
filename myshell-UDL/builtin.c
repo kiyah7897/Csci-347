@@ -1,4 +1,3 @@
-#define _GNU_SOURCE
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -30,6 +29,31 @@ static void cmdB_tail(char** args, int argc);
 static void cmdB_touch(char** args, int argc);
 
 void cmdB_stat(char** args, int argc){
+  if(argc < 2){
+    fprintf(stderr, "stat: missing file operand\n");
+    return;
+  }
+  for(int i = 0 ; i < argc; i++){
+    struct stat sb;
+    if (stst(args[i], &sb) == -1){
+      perror(args[i]);
+      continue;
+    }
+    printf("File Name: %s\n", args[i]);
+    printf("Size: %lld \tBlocks: %lld \tIO Block: %lld" ,(long long)sb.st_size ,
+    (long long)sb.st_blocks , (long long)sb.st_blksize);
+    
+    if(S_ISREG(sb.st_mode)){
+      printf("regulat file\n");
+    }else if( S_ISDIR(sb.st_mode)){
+      printf("directory\n");
+    }else{
+      printf(" other\n");
+    }
+    printf("Device %u,%u\tInode: %llu\tLinks: %llu\n" , 
+    major(sb.st_dev), minor(sb.st_dev), (unsigned long long)sb.st_ino, (unsigned long long)sb.st_nlink);
+
+  }
 
 }
 

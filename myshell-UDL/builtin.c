@@ -30,7 +30,7 @@ static void cmdB_tail(char** args, int argc);
 static void cmdB_touch(char** args, int argc);
 
 void cmdB_stat(char** args, int argc){
-/*TODO:*/
+
 }
 
 static void cmdB_tail(char** args, int argc){
@@ -45,7 +45,10 @@ static void cmdB_tail(char** args, int argc){
       perror(args[i]);
       continue;
     }
-    if ( argc > 2){
+    if (argc > 2){
+      if(i > 1){
+        printf("\n");
+      }
       printf("==> %s <==\n", args[i]);
     }
     char *lines[10] = {NULL};
@@ -55,16 +58,16 @@ static void cmdB_tail(char** args, int argc){
     while(getline(&lines[count %10], &size[count % 10], fp) != -1){
       count++;
     }
-    long n;
-    long start;
+    long n = (count < 10) ? count: 10;
+    long start = (count < 10) ? 0 : count % 10;
+
     for(long j = 0; j < n; j++){
-      //
+      fputs(lines[(start + j) % 10] , stdout);
     }
     for(int k = 0; k < 10; k++){
       free(lines[k]);
     }
     fclose(fp);
-
     }
   }
 

@@ -28,14 +28,14 @@ static void cmdB_stat(char** args, int argc);
 static void cmdB_tail(char** args, int argc);
 static void cmdB_touch(char** args, int argc);
 
-void cmdB_stat(char** args, int argc){
+static void cmdB_stat(char** args, int argc){
   if(argc < 2){
     fprintf(stderr, "stat: missing file operand\n");
     return;
   }
-  for(int i = 0 ; i < argc; i++){
+  for(int i = 1 ; i < argc; i++){
     struct stat sb;
-    if (stst(args[i], &sb) == -1){
+    if (stat(args[i], &sb) == -1){
       perror(args[i]);
       continue;
     }
@@ -44,16 +44,41 @@ void cmdB_stat(char** args, int argc){
     (long long)sb.st_blocks , (long long)sb.st_blksize);
     
     if(S_ISREG(sb.st_mode)){
-      printf("regulat file\n");
+      printf(" regular file\n");
     }else if( S_ISDIR(sb.st_mode)){
-      printf("directory\n");
+      printf(" directory\n");
     }else{
       printf(" other\n");
     }
     printf("Device %u,%u\tInode: %llu\tLinks: %llu\n" , 
     major(sb.st_dev), minor(sb.st_dev), (unsigned long long)sb.st_ino, (unsigned long long)sb.st_nlink);
+    
+    printf("Permissions: %o/," , sb.st_mode & 0777);
 
+    char permissions[11];
+    permissions[0] = S_ISDIR(sb.st_mode) ? 'd' : '-';
+    permissions[1] = (sb.st_mode & S_IRUSR) ? 'r' : '-';
+    permissions[2] = (sb.st_mode & S_IWUSR) ? 'w' : '-';
+    permissions[3] = (sb.st_mode & S_IXUSR) ? 'x' : '-';
+    permissions[4] = (sb.st_mode & S_IRGRP) ? 'r' : '-';
+    permissions[5] = (sb.st_mode & S_IWGRP) ? 'w' : '-';
+    permissions[6] = (sb.st_mode & S_IXGRP) ? 'x' : '-';
+    permissions[7] = (sb.st_mode & S_IROTH) ? 'r' : '-';
+    permissions[8] = (sb.st_mode & S_IWOTH) ? 'w' : '-';
+    permissions[9] = (sb.st_mode & S_IXOTH) ? 'x' : '-';
+    permissions[10] = '\0';
+    printf("%s)\t" , permissions);
+
+    struct passwd *pw = getpwuid(sb.st_uid);
+    const char *userName = (pw != NULL) ? pw->pw_name : "UNKNOWN" ;
+    
+    struct group *gr = getgrgid(sb.st_gid);
+    const char *groupName = (gr != NULL) ? gr->gr_name : "UNKNOWN";
+    
+    printf("UID: (%u, %s)\tGID: (%u, %s)\n" , 
+    (unsigned)sb.st_uid, userName, (unsigned)sb.st_gid,groupName);
   }
+  
 
 }
 

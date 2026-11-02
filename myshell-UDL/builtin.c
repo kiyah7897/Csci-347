@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,6 +12,10 @@
 #include <ctype.h>
 #include "builtin.h"
 #include <dirent.h>
+#include <pwd.h>
+#include <grp.h>
+#include <time.h>
+#include <sys/sysmacros.h>
 
 
 //Prototypes
@@ -53,7 +58,7 @@ static void cmdB_stat(char** args, int argc){
     printf("Device %u,%u\tInode: %llu\tLinks: %llu\n" , 
     major(sb.st_dev), minor(sb.st_dev), (unsigned long long)sb.st_ino, (unsigned long long)sb.st_nlink);
     
-    printf("Permissions: %o/," , sb.st_mode & 0777);
+    printf("Permissions: (%o/" , sb.st_mode & 0777);
 
     char permissions[11];
     permissions[0] = S_ISDIR(sb.st_mode) ? 'd' : '-';
@@ -75,10 +80,12 @@ static void cmdB_stat(char** args, int argc){
     struct group *gr = getgrgid(sb.st_gid);
     const char *groupName = (gr != NULL) ? gr->gr_name : "UNKNOWN";
     
-    printf("UID: (%u, %s)\tGID: (%u, %s)\n" , 
+    printf("UID: (%u, %s)\tGID: (%u, %s)\n",
     (unsigned)sb.st_uid, userName, (unsigned)sb.st_gid,groupName);
+    printf("Access: %s", ctime(&sb.st_atime));
+    printf("Modify: %s", ctime(&sb.st_mtime));
+    printf("Change: %s", ctime(&sb.st_ctime));
   }
-  
 
 }
 
